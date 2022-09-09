@@ -1,9 +1,64 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { CustomModal as Modal } from "./components/ModalFunc";
 import axios from "axios";
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+
+const TabList = ({viewCompleted, displayCompleted}) => {
+  return (
+    <div className="nav nav-tabs">
+      <span
+        className={viewCompleted ? "nav-link active" : "nav-link"}
+        onClick={() => displayCompleted(true)}
+      >
+        Complete
+      </span>
+      <span
+        className={viewCompleted ? "nav-link" : "nav-link active"}
+        onClick={() => displayCompleted(false)}
+      >
+        Incomplete
+      </span>
+    </div>
+  );
+};
+
+const Items = ({todoList, viewCompleted, handleDelete, editItem}) => {
+  const newItems = useMemo(() => todoList.filter(
+    (item) => item.completed === viewCompleted
+  ), [todoList, viewCompleted]);
+
+  return newItems.map((item) => (
+    <li
+      key={item.id}
+      className="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <span
+        className={`todo-title mr-2 ${
+          viewCompleted ? "completed-todo" : ""
+        }`}
+        title={item.description}
+      >
+        {item.title}
+      </span>
+      <span>
+        <button
+          className="btn btn-secondary mr-2"
+          onClick={() => editItem(item)}
+        >
+          Edit
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => handleDelete(item)}
+        >
+          Delete
+        </button>
+      </span>
+    </li>
+  ));
+};
 
 export const App = () => {
   const [viewCompleted, setViewCompleted] = useState(false);
@@ -74,61 +129,6 @@ export const App = () => {
     return setViewCompleted(false);
   };
 
-  const renderTabList = () => {
-    return (
-      <div className="nav nav-tabs">
-        <span
-          className={viewCompleted ? "nav-link active" : "nav-link"}
-          onClick={() => displayCompleted(true)}
-        >
-          Complete
-        </span>
-        <span
-          className={viewCompleted ? "nav-link" : "nav-link active"}
-          onClick={() => displayCompleted(false)}
-        >
-          Incomplete
-        </span>
-      </div>
-    );
-  };
-
-  const renderItems = () => {
-    const newItems = todoList.filter(
-      (item) => item.completed === viewCompleted
-    );
-
-    return newItems.map((item) => (
-      <li
-        key={item.id}
-        className="list-group-item d-flex justify-content-between align-items-center"
-      >
-        <span
-          className={`todo-title mr-2 ${
-            viewCompleted ? "completed-todo" : ""
-          }`}
-          title={item.description}
-        >
-          {item.title}
-        </span>
-        <span>
-          <button
-            className="btn btn-secondary mr-2"
-            onClick={() => editItem(item)}
-          >
-            Edit
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => handleDelete(item)}
-          >
-            Delete
-          </button>
-        </span>
-      </li>
-    ));
-  };
-
   return (
       <main className="container">
         <h1 className="text-white text-uppercase text-center my-4">Todo app</h1>
@@ -143,9 +143,9 @@ export const App = () => {
                   Add task
                 </button>
               </div>
-              {renderTabList()}
+              <TabList viewCompleted={viewCompleted} displayCompleted={displayCompleted} />
               <ul className="list-group list-group-flush border-top-0">
-                {renderItems()}
+                <Items viewCompleted={viewCompleted} todoList={todoList} handleDelete={handleDelete} editItem={editItem} />
               </ul>
             </div>
           </div>

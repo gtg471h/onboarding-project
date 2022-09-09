@@ -12,7 +12,9 @@ import {
 } from "reactstrap";
 
 export const CustomModal = ({inputItem, toggle, onSave}) => {
-  const [activeItem, setActiveItem] = useState(inputItem)
+  const [activeItem, setNewInputItem] = useState(inputItem)
+
+  const {id, title, description, completed} = activeItem;
 
   const handleChange = (e) => {
     let { name, value } = e.target;
@@ -21,7 +23,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
       value = e.target.checked;
     }
 
-    setActiveItem({ ...activeItem, [name]: value });
+    setNewInputItem({ id, title, description, completed, [name]: value });
   };
 
   return (
@@ -35,7 +37,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
               type="text"
               id="todo-title"
               name="title"
-              value={activeItem.title}
+              value={title}
               onChange={handleChange}
               placeholder="Enter Todo Title"
             />
@@ -46,9 +48,9 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
               type="text"
               id="todo-description"
               name="description"
-              value={activeItem.description}
+              value={description}
               onChange={handleChange}
-              placeholder="Enter Todo description"
+              placeholder="Enter Todo Description"
             />
           </FormGroup>
           <FormGroup check>
@@ -56,7 +58,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
               <Input
                 type="checkbox"
                 name="completed"
-                checked={activeItem.completed}
+                checked={completed}
                 onChange={handleChange}
               />
               Completed

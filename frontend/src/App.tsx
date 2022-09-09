@@ -80,7 +80,7 @@ const Items: FC<ItemsProps> = ({todoList, viewCompleted, handleDelete, editItem}
 export const App = () => {
   const [viewCompleted, setViewCompleted] = useState(false);
 
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState<TodoItem[]>([]);
 
   const [modal, setModal] = useState(false);
 

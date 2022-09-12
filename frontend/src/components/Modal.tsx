@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState, FC, ChangeEvent, ComponentProps} from "react";
 import {
   Button,
   Modal,
@@ -10,20 +10,29 @@ import {
   Input,
   Label,
 } from "reactstrap";
+import {TodoItem} from "../models/TodoItem";
 
-export const CustomModal = ({inputItem, toggle, onSave}) => {
-  const [activeItem, setNewInputItem] = useState(inputItem)
+interface CustomModalProps {
+  inputItem: TodoItem;
+  toggle: ComponentProps<typeof ModalHeader>['toggle'] & ComponentProps<typeof Modal>['toggle'];
+  onSave: (item: TodoItem) => void;
+}
+
+export const CustomModal: FC<CustomModalProps> = ({inputItem, toggle, onSave}) => {
+  const [activeItem, setNewInputItem] = useState<TodoItem>(inputItem)
 
   const {id, title, description, completed} = activeItem;
 
-  const handleChange = (e) => {
+  const handleTextInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     let { name, value } = e.target;
 
-    if (e.target.type === "checkbox") {
-      value = e.target.checked;
-    }
-
     setNewInputItem({ id, title, description, completed, [name]: value });
+  };
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let { name, checked } = e.target;
+
+    setNewInputItem({ id, title, description, completed, [name]: checked });
   };
 
   return (
@@ -38,7 +47,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
               id="todo-title"
               name="title"
               value={title}
-              onChange={handleChange}
+              onChange={handleTextInputChange}
               placeholder="Enter Todo Title"
             />
           </FormGroup>
@@ -49,7 +58,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
               id="todo-description"
               name="description"
               value={description}
-              onChange={handleChange}
+              onChange={handleTextInputChange}
               placeholder="Enter Todo Description"
             />
           </FormGroup>
@@ -59,7 +68,7 @@ export const CustomModal = ({inputItem, toggle, onSave}) => {
                 type="checkbox"
                 name="completed"
                 checked={completed}
-                onChange={handleChange}
+                onChange={handleCheckboxChange}
               />
               Completed
             </Label>

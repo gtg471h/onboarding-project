@@ -77,7 +77,7 @@ const Items: FC<ItemsProps> = ({todoList, viewCompleted, handleDelete, editItem}
   );
 };
 
-export const App = () => {
+export const App: FC = () => {
   const [viewCompleted, setViewCompleted] = useState<boolean>(false);
 
   const [todoList, setTodoList] = useState<TodoItem[]>([]);

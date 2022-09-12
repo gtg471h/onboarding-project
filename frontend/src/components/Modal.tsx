@@ -19,7 +19,7 @@ interface CustomModalProps {
 }
 
 export const CustomModal: FC<CustomModalProps> = ({inputItem, toggle, onSave}) => {
-  const [activeItem, setNewInputItem] = useState(inputItem)
+  const [activeItem, setNewInputItem] = useState<TodoItem>(inputItem)
 
   const {id, title, description, completed} = activeItem;
 
